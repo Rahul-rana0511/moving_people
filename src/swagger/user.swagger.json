@@ -1,0 +1,2734 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+      "title": "MG Fresh Documentation",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "https://mgfreshshop.in/",
+        "description": "live Server"
+      },
+      {
+        "url": "http://localhost:4081/",
+        "description": "live Server"
+      },
+      {
+        "url": "http://89.116.21.87:4081/",
+        "description": "live Server"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Image",
+        "description": "Upload Images"
+      },
+      {
+        "name": "Authentication",
+        "description": "Login Flow related apis"
+      },
+      {
+        "name": "Address",
+        "description": "Address Flow related apis"
+      },
+      {
+        "name": "Admin Flow",
+        "description": "Admin Flow related apis"
+      },
+       {
+      "name": "Core Functionality",
+      "description": "Core Functionality related apis"
+    }
+    ],
+   
+    "paths":{
+
+      "/api/user/uploadImage": {
+        "post": {
+          "tags": [
+            "Image"
+          ],
+          "summary": "Upload Images Api",
+          "requestBody": {
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/uploadImage"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          }
+        }
+      },
+      "/api/user/createSuperAdmin": {
+        "get": {
+          "tags": [
+            "Setting"
+          ],
+          "summary": " create admin Api",
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          }
+        }
+      },
+      "/api/user/login": {
+        "post": {
+          "tags": [
+            "Authentication"
+          ],
+          "summary": "login Api",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/login"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          }
+        }
+      },
+      "/api/user/verifyOtp": {
+        "post": {
+          "tags": [
+            "Authentication"
+          ],
+          "summary": "Verify Otp Api",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/verifyOtp"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          }
+        }
+      },
+      "/api/user/resendOtp": {
+        "post": {
+          "tags": [
+            "Authentication"
+          ],
+          "summary": "Resend Otp Api",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/resendOtp"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          }
+        }
+      },  
+      "/api/user/getProfile": {
+        "get": {
+          "tags": [
+            "Setting"
+          ],
+          "summary": " Get my profile Api",
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+    "/api/user/deleteAccount": {
+        "delete": {
+          "tags": [
+            "Setting"
+          ],
+          "summary": "delete Account Api",
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+      "/api/user/logout": {
+        "patch": {
+          "tags": [
+            "Setting"
+          ],
+          "summary": "logout Account Api",
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+      "/api/user/createProfile": {
+        "put": {
+          "tags": [
+            "Authentication"
+          ],
+          "summary": "Create & update profile Api",
+           "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createProfile"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+      "/api/user/addProduct": {
+        "post": {
+          "tags": [
+            "Admin Flow"
+          ],
+          "summary": "Add product Api",
+           "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/addProduct"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+      "/api/user/updateProduct": {
+        "put": {
+          "tags": [
+            "Admin Flow"
+          ],
+          "summary": "update product Api",
+           "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/updateProduct"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+      "/api/user/delProduct/{productId}": {
+        "delete": {
+          "tags": [
+            "Admin Flow"
+          ],
+          "summary": "delete product Api",
+             "parameters": [{ "$ref": "#/components/parameters/productId" }],
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+      "/api/user/getProductDetails/{productId}": {
+        "get": {
+          "tags": [
+            "Admin Flow"
+          ],
+          "summary": "Get product details Api",
+             "parameters": [{ "$ref": "#/components/parameters/productId" }],
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+       "/api/user/getProducts": {
+        "get": {
+          "tags": [
+            "Admin Flow"
+          ],
+          "summary": "Get product list Api",
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+         "/api/user/addPromocode": {
+        "post": {
+          "tags": [
+            "Admin Flow"
+          ],
+          "summary": "Add Promo code Api",
+           "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/addPromocode"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+      "/api/user/updatePromocode": {
+        "put": {
+          "tags": [
+            "Admin Flow"
+          ],
+          "summary": "update promocode Api",
+           "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/updatePromocode"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+      "/api/user/delPromocode/{promoId}": {
+        "delete": {
+          "tags": [
+            "Admin Flow"
+          ],
+          "summary": "delete product Api",
+             "parameters": [{ "$ref": "#/components/parameters/promoId" }],
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+      "/api/user/getPromoDetails/{promoId}": {
+        "get": {
+          "tags": [
+            "Admin Flow"
+          ],
+          "summary": "Get promo details Api",
+             "parameters": [{ "$ref": "#/components/parameters/promoId" }],
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+       "/api/user/getPromocodes": {
+        "get": {
+          "tags": [
+            "Admin Flow"
+          ],
+          "summary": "Get product list Api",
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+        "/api/user/applyPromocode": {
+        "post": {
+          "tags": [
+            "Admin Flow"
+          ],
+          "summary": "apply Promo code Api",
+           "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/applyPromocode"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+         "/api/user/addBasket": {
+        "post": {
+          "tags": [
+            "Admin Flow"
+          ],
+          "summary": "Add basket Api",
+           "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/addBaskets"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+      "/api/user/updateBasket": {
+        "put": {
+          "tags": [
+            "Admin Flow"
+          ],
+          "summary": "update basket Api",
+           "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/updateBaskets"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+      "/api/user/delBasket/{basketId}": {
+        "delete": {
+          "tags": [
+            "Admin Flow"
+          ],
+          "summary": "delete basket Api",
+             "parameters": [{ "$ref": "#/components/parameters/basketId" }],
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+      "/api/user/getBasketDetails/{basketId}": {
+        "get": {
+          "tags": [
+            "Admin Flow"
+          ],
+          "summary": "Get basket details Api",
+             "parameters": [{ "$ref": "#/components/parameters/basketId" }],
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+       "/api/user/getBaskets": {
+        "get": {
+          "tags": [
+            "Admin Flow"
+          ],
+          "summary": "Get basket list Api",
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+         "/api/user/createAddress": {
+        "post": {
+          "tags": [
+            "Address"
+          ],
+          "summary": "Add address Api",
+           "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createAddress"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+       "/api/user/delAddress/{addressId}": {
+        "delete": {
+          "tags": [
+            "Address"
+          ],
+          "summary": "delete address Api",
+             "parameters": [{ "$ref": "#/components/parameters/addressId" }],
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+       "/api/user/getAddresses": {
+        "get": {
+          "tags": [
+            "Address"
+          ],
+          "summary": "Get address list Api",
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+       "/api/user/getAddressById/{addressId}": {
+        "get": {
+          "tags": [
+            "Address"
+          ],
+          "summary": "Get address details Api",
+             "parameters": [{ "$ref": "#/components/parameters/addressId" }],
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+      "/api/user/updateAddress/{addressId}": {
+        "put": {
+          "tags": [
+            "Address"
+          ],
+          "summary": "update address Api",
+           "parameters": [{ "$ref": "#/components/parameters/addressId" }],
+           "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createAddress"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "Bad request - Invalid input, validation error"
+            },
+            "401": {
+              "description": "Unauthorized - Authentication failure"
+            },
+            "500": {
+              "description": "Internal server error - Something went wrong on the server side"
+            }
+          },
+          "security": [
+            {
+              "access_token": [
+                "access_token"
+              ]
+            }
+          ]
+        }
+      },
+        "/api/user/homeScreen": {
+      "get": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": " Get my profile Api",
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/buyNow": {
+      "get": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": " Get my profile Api",
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/getCartItems": {
+      "get": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": " Get Cart Api",
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/createPaymentIntent": {
+      "post": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": "create Payment Intent Api",
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/addInCart": {
+      "post": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": "Add to cart Api",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addInCart"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/verifyPayment": {
+      "post": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": "Verfiy payment Api",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/verifyPayment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/getAllOrders": {
+      "get": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": " Get All orders Api",
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/getOrderById": {
+      "get": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": " Get order by id Api",
+         "parameters": [{ "$ref": "#/components/parameters/orderId" }],
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/getMyOrders": {
+      "get": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": " Get My Orders Api",
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/updateOrderStatus": {
+      "put": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": "update Order Status Api",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateOrderStatus"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/chooseAddress": {
+      "post": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": "choose Address Api",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/chooseAddress"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/updateActiveAddress": {
+      "put": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": "update active address Api",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateActiveAddress"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/updateCartQuantity": {
+      "put": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": "update cart products Api",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateCartQuantity"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/removeCartItem": {
+      "put": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": "remove cart products Api",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/removeCartItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/emptyCart": {
+      "post": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": "empty cart Api",
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/buyAgain": {
+      "get": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": " buy again Api",
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/getNotifications": {
+      "get": {
+        "tags": [
+          "Core Functionality"
+        ],
+        "summary": " Get Notifications Api",
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Bad request - Invalid input, validation error"
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failure"
+          },
+          "500": {
+            "description": "Internal server error - Something went wrong on the server side"
+          }
+        },
+        "security": [
+          {
+            "access_token": [
+              "access_token"
+            ]
+          }
+        ]
+      }
+    }
+    },
+    "components": {
+      "schemas": {
+        "uploadImage": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "string",
+              "description": "upload image",
+              "format": "binary"
+            }
+          }
+        },
+        "updateNotification": {
+          "type": "object",
+          "properties": {
+            "device_token": {
+              "type": "string",
+              "description": "Enter device token"
+            }
+          }
+        },
+        "addServices": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "string",
+              "description": "upload image",
+              "format": "binary"
+            },
+            "name": {
+              "type": "string",
+              "description": "Give name to service"
+            }
+          }
+        },
+        "addReviews": {
+          "type": "object",
+          "properties": {
+            "review": {
+              "type": "string",
+              "description": "enter review"
+            },
+            "ratings": {
+              "type": "number",
+              "description": "add Rating"
+            }
+          }
+        },
+        "updateProfile": {
+          "type": "object",
+          "properties": {
+            "profile_image": {
+              "type": "string",
+              "description": "upload image"
+            },
+            "name": {
+              "type": "string",
+              "description": "enter name"
+            },
+            "dob": {
+              "type": "string",
+              "description": "enter dob"
+            },
+            "gender": {
+              "type": "number",
+              "description": "enter gender",
+              "example":"0-> Male 1-> Female"
+            },
+            "bio": {
+              "type": "string",
+              "description": "enter bio"
+            }
+          }
+        },
+        "contactUs": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Add name"
+            },
+            "email": {
+              "type": "string",
+              "description": "Add email"
+            },
+            "subject": {
+              "description": "add Subject",
+              "type": "string"
+            },
+            "message": {
+              "type": "string",
+              "description": "add Message"
+            }
+          }
+        },
+        "chatRoom": {
+          "type": "object",
+          "properties": {
+            "created_with": {
+              "type": "string",
+              "description": "enter created_with"
+            }
+          }
+        },
+        "blockUnblockUser": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "string",
+              "description": "enter userId"
+            },
+            "type": {
+              "type": "number",
+              "description": "enter type"
+            }
+          }
+        },
+        "clearChat": {
+          "type": "object",
+          "properties": {
+            "room_id": {
+              "type": "string",
+              "description": "enter room_id"
+            }
+          }
+        },
+        "updateAvailability": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "number",
+              "description": "0 -> off 1 -> on"
+            }
+          }
+        },
+        "register": {
+          "type": "object",
+          "properties": {
+            "role": {
+              "type": "number",
+              "description": "Enter role",
+              "example":"0 -> Buy 1 -> Sell"
+            },
+            "first_name": {
+              "type": "string",
+              "description": "Enter first name"
+            },
+            "last_name": {
+              "type": "string",
+              "description": "Enter last name"
+            },
+            "country_code": {
+              "type": "string",
+              "description": "Enter Country Code"
+            },
+            "phone_number": {
+              "type": "number",
+              "description": "Enter Phone Number"
+            },
+            "password": {
+              "description": "Enter your Password",
+              "type": "string"
+            },
+             "license_number": {
+              "type": "string",
+              "description": "Enter license number"
+            },
+            "device_token": {
+              "description": "Enter device token",
+              "type": "string"
+            },
+            "device_type": {
+              "description": "0:Web; 1:Android; 2:iOS; 3:default",
+              "type": "number"
+            },
+            "device_model": {
+              "description": "Enter device model",
+              "type": "string"
+            }
+          }
+        },
+        "addProduct": {
+          "type": "object",
+          "properties": {
+            "product_name": {
+              "type": "string",
+              "description": "Enter product_name"
+            },
+            "product_type": {
+              "type": "string",
+              "description": "Enter product_type"
+            },
+            "product_image": {
+              "type": "string",
+              "description": "Enter product_image"
+            },
+            "product_desc": {
+              "type": "string",
+              "description": "Enter product_desc"
+            },
+            "discount": {
+              "type": "number",
+              "description": "Enter discount"
+            },
+            "product_price": {
+              "type": "number",
+              "description": "Enter product_price"
+            },
+            "total_stock": {
+              "type": "number",
+              "description": "Enter total_stock"
+            },
+            "product_quantity": {
+              "type": "number",
+              "description": "Enter product_quantity"
+            }
+          }
+        },
+         "addPromocode": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "Enter product_name"
+            },
+            "description": {
+              "type": "string",
+              "description": "Enter product_type"
+            },
+            "value": {
+              "type": "number",
+              "description": "Enter product_image",
+              "example": "10"
+            },
+            "minOrderValue": {
+              "type": "number",
+              "description": "Enter product_desc"
+            },
+            "status": {
+              "type": "string",
+              "description": "Enter status",
+              "example":"active inactive expired"
+            }
+          }
+        },
+         "applyPromocode": {
+          "type": "object",
+          "properties": {
+            "promoId": {
+              "type": "string",
+              "description": "Enter promoId"
+            }
+          }
+        },
+         "updatePromocode": {
+          "type": "object",
+          "properties": {
+             "promoId": {
+              "type": "string",
+              "description": "Enter product_name"
+            },
+            "code": {
+              "type": "string",
+              "description": "Enter product_name"
+            },
+            "description": {
+              "type": "string",
+              "description": "Enter product_type"
+            },
+            "value": {
+              "type": "number",
+              "description": "Enter product_image",
+              "example": "10"
+            },
+            "minOrderValue": {
+              "type": "number",
+              "description": "Enter product_desc"
+            },
+            "status": {
+              "type": "string",
+              "description": "Enter status",
+              "example":"active inactive expired"
+            }
+          }
+        },
+         "updateProduct": {
+          "type": "object",
+          "properties": {
+            "productId": {
+              "type": "string",
+              "description": "Enter product_name"
+            },
+            "product_name": {
+              "type": "string",
+              "description": "Enter product_name"
+            },
+            "product_type": {
+              "type": "string",
+              "description": "Enter product_type"
+            },
+            "product_image": {
+              "type": "string",
+              "description": "Enter product_image"
+            },
+            "product_desc": {
+              "type": "string",
+              "description": "Enter product_desc"
+            },
+            "discount": {
+              "type": "number",
+              "description": "Enter discount"
+            },
+            "product_price": {
+              "type": "number",
+              "description": "Enter product_price"
+            },
+            "total_stock": {
+              "type": "number",
+              "description": "Enter total_stock"
+            },
+            "product_quantity": {
+              "type": "number",
+              "description": "Enter product_quantity"
+            }
+          }
+        },
+        "addBaskets": {
+          "type": "object",
+          "properties": {
+             "basket_name": {
+              "type": "string",
+              "description": "Enter basket_name"
+            },
+            "basket_type": {
+              "type": "string",
+              "description": "Enter basket_type"
+            },
+            "basket_image": {
+              "type": "string",
+              "description": "Enter basket_image"
+            },
+            "box_type": {
+              "type": "number",
+              "description": "Enter box_type",
+              "example":"0 -> Custom 1 -> Goodness"
+            },
+            "mandatory_products": {
+              "type": "number",
+              "description": "Enter mandatory_products"
+            },
+            "products": {
+              "description": "Add products",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+         "chooseAddress": {
+          "type": "object",
+          "properties": {
+             "cartId": {
+              "type": "string",
+              "description": "Enter basket_name"
+            },
+            "addressId": {
+              "type": "string",
+              "description": "Enter basket_type"
+            }
+          }
+        },
+        "updateOrderStatus": {
+          "type": "object",
+          "properties": {
+             "orderId": {
+              "type": "string",
+              "description": "Enter basket_name"
+            },
+            "status": {
+              "type": "string",
+              "description": "Enter basket_type",
+              "example":"pending confirmed shipped delivered cancelled"
+            }
+          }
+        },
+        "updateBaskets": {
+          "type": "object",
+          "properties": {
+            "basketId": {
+              "type": "string",
+              "description": "Enter basketId"
+            },
+             "basket_name": {
+              "type": "string",
+              "description": "Enter basket_name"
+            },
+            "basket_type": {
+              "type": "string",
+              "description": "Enter basket_type"
+            },
+            "basket_image": {
+              "type": "string",
+              "description": "Enter basket_image"
+            },
+              "box_type": {
+              "type": "number",
+              "description": "Enter box_type",
+              "example":"0 -> Custom 1 -> Goodness"
+            },
+            "mandatory_products": {
+              "type": "number",
+              "description": "Enter mandatory_products"
+            },
+            "products": {
+              "description": "Add products",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "createAddress": {
+  "type": "object",
+  "properties": {
+    "delivery_details": {
+      "type": "string",
+      "description": "Enter delivery details"
+    },
+    "address_details": {
+      "type": "string",
+      "description": "Enter address details"
+    },
+    "name": {
+      "type": "string",
+      "description": "Enter name"
+    },
+    "country_code": {
+      "type": "string",
+      "description": "Enter country code"
+    },
+    "phone_number": {
+      "type": "number",
+      "description": "Enter phone number"
+    },
+    "address_type": {
+      "type": "number",
+      "description": "Address type (0, 1, 2)",
+      "enum": [0, 1, 2]
+    },
+    "lat": {
+      "type": "number",
+      "description": "Latitude"
+    },
+    "long": {
+      "type": "number",
+      "description": "Longitude"
+    }
+  }
+},
+       "addInCart": {
+        "type": "object",
+        "properties": {
+          "basketId": {
+            "type": "string",
+            "description": "Enter basketId"
+          },
+          "products": {
+            "type": "array",
+            "description": "Product replacements for predefined basket (max 3)",
+            "items": {
+              "type": "object",
+              "properties": {
+                "productId": {
+                  "type": "string",
+                  "format": "objectId",
+                  "description": "Original product ID to replace",
+                  "example": "507f1f77bcf86cd799439014"
+                },
+                "quantity": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "productId": {
+            "type": "string",
+            "description": "Enter productId"
+          },
+          "note": {
+            "type": "string",
+            "description": "Enter note"
+          },
+          "quantity": {
+            "type": "string",
+            "description": "Enter quantity"
+          },
+          "replacements": {
+            "type": "array",
+            "description": "Product replacements for predefined basket (max 3)",
+            "items": {
+              "type": "object",
+              "properties": {
+                "originalProductId": {
+                  "type": "string",
+                  "format": "objectId",
+                  "description": "Original product ID to replace",
+                  "example": "507f1f77bcf86cd799439014"
+                },
+                "newProductId": {
+                  "type": "string",
+                  "format": "objectId",
+                  "description": "New product ID to replace with",
+                  "example": "507f1f77bcf86cd799439015"
+                }
+              },
+              "required": [
+                "originalProductId",
+                "newProductId"
+              ]
+            }
+          },
+          "phone_number": {
+            "type": "number",
+            "description": "Enter phone number"
+          }
+        }
+      },
+      "dummyPayment": {
+        "type": "object",
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "description": "Enter vehicleId"
+          }
+        }
+      },
+      "createPaymentIntent": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "Enter price"
+          }
+        }
+      },
+      "verifyPayment": {
+        "type": "object",
+        "properties": {
+          "razorpay_order_id": {
+            "type": "string",
+            "description": "Enter razorpay_order_id"
+          },
+          "razorpay_payment_id": {
+            "type": "string",
+            "description": "Enter razorpay_payment_id"
+          },
+          "razorpay_signature": {
+            "type": "string",
+            "description": "Enter razorpay_signature"
+          },
+          "paymentMethod": {
+            "type": "string",
+            "description": "Enter paymentMethod"
+          },
+          "shippingAddress": {
+            "type": "string",
+            "description": "Enter shippingAddress"
+          }
+        }
+      },
+        "updateActiveAddress": {
+          "type": "object",
+          "properties": {
+            "active_address": {
+              "type": "string",
+              "description": "Enter bookingId"
+            }
+          }
+        },
+        "updateCartQuantity": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string",
+              "description": "Enter type",
+              "example" :"increase, decrease"
+            },
+            "basketId": {
+              "type": "string",
+              "description": "Enter basketId"
+            },
+            "productId": {
+              "type": "string",
+              "description": "Enter productId"
+            },
+            "type": {
+              "type": "string",
+              "description": "Enter type",
+              "example":"individual basket"
+            }
+          }
+        },
+        "removeCartItem": {
+          "type": "object",
+          "properties": {
+            "basketId": {
+              "type": "string",
+              "description": "Enter basketId"
+            },
+            "productId": {
+              "type": "string",
+              "description": "Enter productId"
+            },
+            "type": {
+              "type": "string",
+              "description": "Enter type",
+              "example":"individual basket"
+            }
+          }
+        },
+        "updateBooking": {
+          "type": "object",
+          "properties": {
+            "bookingId": {
+              "type": "string",
+              "description": "Enter bookingId"
+            },
+            "type": {
+              "type": "number",
+              "description": "1 -> Completed 2 -> no show"
+            }
+          }
+        },
+        "likeDislikeVehicle": {
+          "type": "object",
+          "properties": {
+            "vehicleId": {
+              "type": "string",
+              "description": "Enter vehicleId"
+            },
+            "type": {
+              "type": "number",
+              "description": "1 -> like 2 -> dislike",
+              "example": "1 -> like 2 -> dislike"
+            }
+          }
+        },
+        "addUser": {
+          "type": "object",
+          "properties": {
+            "country_code": {
+              "type": "string",
+              "description": "Enter Country Code"
+            },
+            "phone_number": {
+              "type": "number",
+              "description": "Enter Phone Number"
+            },
+            "email": {
+              "description": "Enter your Email",
+              "type": "string",
+              "format": "email",
+              "default": "abc@yopmail.com"
+            },
+            "name": {
+              "description": "Enter your name",
+              "type": "string"
+            },
+            "device_token": {
+              "description": "Enter device token",
+              "type": "string"
+            },
+            "device_type": {
+              "description": "0:Web; 1:Android; 2:iOS; 3:default",
+              "type": "number"
+            },
+            "device_model": {
+              "description": "Enter device model",
+              "type": "string"
+            }
+          }
+        },
+        "createBarber": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "description": "Enter barber name",
+              "type": "string"
+            },
+            "email": {
+              "description": "Enter your Email",
+              "type": "string",
+              "format": "email",
+              "default": "abc@yopmail.com"
+            },
+            "password": {
+              "description": "Enter your Password",
+              "type": "string"
+            },
+            "specialization": {
+              "description": "Add Specialization",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "shop": {
+              "description": "add shop",
+              "type": "string"
+            },
+            "profile_image": {
+              "description": "upload image",
+              "type": "string"
+            }
+          }
+        },
+        "login": {
+          "type": "object",
+          "properties": {
+              "email": {
+              "description": "Enter your phone number",
+              "type": "number"
+            },
+            "phone_number": {
+              "description": "Enter your phone number",
+              "type": "number"
+            },
+            "country_code": {
+              "description": "Enter your country code",
+              "type": "string"
+            },
+            "device_token": {
+              "description": "Enter device token",
+              "type": "string"
+            },
+            "device_type": {
+              "description": "0:Web; 1:Android; 2:iOS; 3:default",
+              "type": "number"
+            },
+            "device_model": {
+              "description": "Enter device model",
+              "type": "string"
+            }
+          }
+        },
+        "forgetPassword": {
+          "type": "object",
+          "properties": {
+         "phone_number": {
+              "description": "Enter your phone number",
+              "type": "number"
+            },
+            "country_code": {
+              "description": "Enter your country code",
+              "type": "string"
+            }
+          }
+        },
+        "resetPassword": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "description": "Enter your Id",
+              "type": "string"
+            },
+            "password": {
+              "description": "Enter your Password",
+              "type": "string"
+            }
+          }
+        },
+        "verifyOtp": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "description": "Enter Id",
+              "type": "string"
+            },
+            "otp": {
+              "description": "Enter Otp",
+              "type": "number"
+            }
+          }
+        },
+        "resendOtp": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "description": "Enter your Id",
+              "type": "string"
+            }
+          }
+        },
+        "createShop": {
+          "type": "object",
+          "properties": {
+            "images": {
+              "description": "Upload Images",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "shop_name": {
+              "type": "String",
+              "description": "Enter Shop name"
+            },
+            "location": {
+              "type": "String",
+              "description": "Enter Location"
+            },
+            "services": {
+              "description": "Add Specialization",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": {
+              "description": "Add description",
+              "type": "string"
+            },
+            "available_days": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "day": {
+                    "type": "number"
+                  },
+                  "opening_time": {
+                    "type": "string"
+                  },
+                  "closing_time":{
+                    "type":"string"
+                  }
+                }
+              }
+            },
+            "opening_time": {
+              "type": "string",
+              "description": "add opening time"
+            },
+            "closing_time": {
+              "type": "string",
+              "description": "add closing time"
+            }
+          }
+        },
+        "editShop": {
+          "type": "object",
+          "properties": {
+            "shopId": {
+              "type": "String",
+              "description": "Enter ShopId"
+            },
+            "shop_name": {
+              "type": "String",
+              "description": "Enter Shop name"
+            },
+            "images": {
+              "description": "Upload Images",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "location": {
+              "type": "String",
+              "description": "Enter Location"
+            },
+            "services": {
+              "description": "Add Specialization",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": {
+              "description": "Add description",
+              "type": "string"
+            },
+            "available_days": {
+              "description": "0 -> Sun, 1 -> Mon, 2 -> Tues, 3 -> Wed, 4 -> Thu, 5 -> Fri, 6 -> Sat",
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "opening_time": {
+              "type": "string",
+              "description": "add opening time"
+            },
+            "closing_time": {
+              "type": "string",
+              "description": "add closing time"
+            }
+          }
+        },
+        "createPassword": {
+          "type": "object",
+          "properties": {
+            "password": {
+              "description": "Enter password",
+              "type": "string"
+            }
+          }
+        },
+        "createProfile": {
+          "type": "object",
+          "properties": {
+            "profile_image": {
+              "description": "Upload profile image",
+              "type": "string"
+            },
+            "first_name": {
+              "type": "string",
+              "description": "Enter first name"
+            },
+            "last_name": {
+              "description": "Enter last name",
+              "type": "string"
+            },
+            "gender": {
+              "description": "enter gender",
+              "type": "number",
+              "example":"0 -> Men 1 -> Women 2 -> prefer not to say"
+            }
+          }
+        },
+        "bookSlot": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "description": "Enter date",
+              "type": "string"
+            },
+            "locationId": {
+              "type": "string",
+              "description": "Enter Shop Id"
+            },
+            "barberId": {
+              "description": "enter barberId",
+              "type": "string"
+            },
+            "categories": {
+              "description": "Add categories",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "time": {
+              "description": "enter time",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "parameters": {
+        "userId": {
+          "name": "userId",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+        "search": {
+          "name": "search",
+          "in": "query",
+          "schema": {
+            "type": "string",
+            "format": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+        "car": {
+          "name": "car",
+          "in": "query",
+          "schema": {
+            "type": "string",
+            "format": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+        "bookingId": {
+          "name": "bookingId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+        "type": {
+          "name": "type",
+          "in": "query",
+          "schema": {
+            "type": "string",
+            "format": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+        "sort": {
+          "name": "sort",
+          "in": "query",
+          "schema": {
+            "type": "string",
+            "format": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+        "payment_intent": {
+          "name": "payment_intent",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+        "locationId": {
+          "name": "locationId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+        "serviceId": {
+          "name": "serviceId",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+        "brand": {
+          "name": "brand",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+         "model": {
+          "name": "model",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+        "date": {
+          "name": "date",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+        "month": {
+          "name": "month",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+        "basketId": {
+          "name": "basketId",
+          "in": "path",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+         "addressId": {
+          "name": "addressId",
+          "in": "path",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+        "productId": {
+          "name": "productId",
+          "in": "path",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+         "promoId": {
+          "name": "promoId",
+          "in": "path",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form",
+          "explode": true
+        },
+         "orderId": {
+          "name": "orderId",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form",
+          "explode": true
+        }
+      },
+      "securitySchemes": {
+        "access_token": {
+          "type": "apiKey",
+          "name": "authorization",
+          "in": "header"
+        }
+      }
+    }
+  }
+  

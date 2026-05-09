@@ -1,0 +1,123 @@
+import { Schema, model } from "mongoose";
+
+const orderSchema = new Schema(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
+    // Baskets included in the order
+    baskets: [
+      {
+        basketId: {
+          type: Schema.Types.ObjectId,
+          ref: "Basket",
+          required: true,
+        },
+        type: {
+          type: String,
+          enum: ["predefined", "custom"],
+          required: true,
+        },
+         note:{
+          type: String,
+          default: null
+        },
+        name: {
+          type: String,
+          default: null,
+        },
+        products: [
+          {
+            productId: {
+              type: Schema.Types.ObjectId,
+              ref: "Product",
+              required: true,
+            },
+            quantity: {
+              type: Number,
+              default: 1,
+              min: 1,
+            },
+               unit:{
+              type: String,
+              default: null
+            },
+            price:{
+              type: Number,
+              default: 0
+            }
+            
+          },
+        ],
+      },
+    ],
+
+    // Directly added individual products
+    individualProducts: [
+      {
+        productId: {
+          type: Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          default: 1,
+          min: 1,
+        },
+         note:{
+          type: String,
+          default: null
+        },
+      },
+    ],
+
+    // Order meta
+    status: {
+      type: String,
+      enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
+      default: "pending",
+    },
+
+    totalAmount: {
+      type: Number,
+      default: 0
+    },
+    amount: {
+      type: Number,
+      default: 0
+    },
+    discount: {
+      type: Number,
+      default: 0
+    },
+    totalQuantity:{
+      type: Number
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["unpaid", "paid", "failed", "refunded"],
+      default: "unpaid",
+    },
+
+    paymentMethod: {
+      type: String,
+      enum: ["cod", "card", "upi", "wallet"],
+      default: "cod",
+    },
+
+    shippingAddress: {
+       type: Schema.Types.ObjectId,
+      ref: "Address",
+      default: null
+    },
+  },
+  { timestamps: true }
+);
+
+const Order = model("Order", orderSchema, "Orders");
+
+export default Order;
