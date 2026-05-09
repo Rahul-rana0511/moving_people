@@ -14,7 +14,7 @@ const orderBooked = (name) => {
     };
   };
   const orderOutOfDelivery = (name) => {
-    return {
+    return { 
       type: 3,
       title: `Order Out Of Delivery`,
       desc: `Hi ${name}, your order has been Out of Delivery`,
