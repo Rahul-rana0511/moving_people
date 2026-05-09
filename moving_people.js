@@ -4,7 +4,7 @@ import http from 'http';
 import morgan from "morgan";
 import cors from "cors";
 import swagger_ui from "swagger-ui-express"; 
-import openapi_docs from "./output.openapi.json" assert { type: "json" };
+import openapi_docs from "./output.openapi.json" with { type: "json" };
 import connectDB from "./src/config/db.connection.js";
 // import adminRoutes from "./src/routes/adminRoutes.js";
 // import userRoutes from "./src/routes/user.routes.js";
