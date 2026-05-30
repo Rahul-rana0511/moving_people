@@ -6,11 +6,8 @@ import cors from "cors";
 import swagger_ui from "swagger-ui-express"; 
 import openapi_docs from "./output.openapi.json" with { type: "json" };
 import connectDB from "./src/config/db.connection.js";
-// import adminRoutes from "./src/routes/adminRoutes.js";
+import adminRoutes from "./src/routes/admin.routes.js";
 // import userRoutes from "./src/routes/user.routes.js";
-import Order from "./src/models/orders.js";
-import User from "./src/models/users.js";
-import pushNotification from "./src/utils/notificationHandler.js";
 // ✅ Load env first
 dotenv.config();
 
@@ -36,7 +33,7 @@ app.use(morgan('dev'));
 
 
 // ✅ Routes (if needed later)
-// app.use("/api/admin", adminRoutes);
+app.use("/api/admin", adminRoutes);
 // app.use("/api/user", userRoutes);
 
 // ✅ Swagger Docs

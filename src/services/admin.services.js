@@ -1,248 +1,241 @@
 import * as Model from "../models/index.js";
 import { errorRes, successRes } from "../utils/response.js";
+import JWT from "jsonwebtoken";
+import bcrypt from "bcrypt";
+// import sendEmailOtp from "../utils/sendEmailOtp.js";
 import "dotenv/config";
 
+const JWT_SECRET_KEY = process.env.JWT_SECRET;
 
 const adminServices = {
-   
-  updateProduct: async (req, res) => {
+  createSuperAdmin: async (req, res) => {
     try {
-      const updateData = await Model.Product.findByIdAndUpdate(
-        req.body.productId,
-        { $set: { ...req.body } },
-        { new: true }
-      );
-      if (!updateData) {
-        return errorRes(res, 404, "Product details not found");
+      const isAdmin = await Model.Admin.findOne({ email: process.env.ADMIN_EMAIL });
+      if (isAdmin) {
+        return successRes(res, 200, "Admin already created");
       }
-      return successRes(
-        res,
-        200,
-        "Product updated successfully",
-        updateData
-      );
-    } catch (err) {
-      return errorRes(res, 500, err.message);
-    }
-  },
-  addProduct: async (req, res) => {
-    try {
-      const addData = await Model.Product.create({
-        ...req.body
+
+      const hashPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
+      const admin = await Model.Admin.create({
+        admin_name: "Super admin",
+        email: process.env.ADMIN_EMAIL,
+        password: hashPassword,
       });
-     
-      return successRes(res, 200, "Product added successfully", addData);
-    } catch (err) {
-      return errorRes(res, 500, err.message);
+
+      const responseObj = admin.toObject();
+      delete responseObj.password;
+      return successRes(res, 200, "Admin created successfully", responseObj);
+    } catch (error) {
+      return errorRes(res, 500, error.message);
     }
   },
- delProduct: async (req, res) => {
+
+  createAdmin: async (req, res) => {
     try {
-      const delData = await Model.Product.findByIdAndDelete(req.params.productId);
-     if(!delData){
-        return errorRes(res, 404, "Product details not found")
-     }
-      return successRes(res, 200, "Product deleted successfully", delData);
-    } catch (err) {
-      return errorRes(res, 500, err.message);
-    }
-  },
-  getProducts: async (req, res) => {
-    try {
-      const allProducts = await Model.Product.find({}).sort({
-        createdAt: -1,
+      const { admin_name, email, password } = req.body;
+      const hashPassword = await bcrypt.hash(password, 10);
+      const otp = Math.floor(1000 + Math.random() * 9000);
+      const newAdmin = await Model.Admin.create({
+        admin_name,
+        email: email.toLowerCase(),
+        password: hashPassword,
+        otp,
       });
-      return successRes(
-        res,
-        200,
-        "Product list fetched successfully",
-        allProducts
-      );
-    } catch (err) {
-      return errorRes(res, 500, err.message);
-    }
-  },
-  getProductDetails: async (req, res) => {
-    try {
-      const { productId } = req.params;
-      const productDetails = await Model.Product.findById(productId);
-      if (!productDetails) {
-        return errorRes(res, 404, "Product details not found");
-      }
-      return successRes(
-        res,
-        200,
-        "Product details fetched successfully",
-        productDetails
-      );
-    } catch (err) {
-      return errorRes(res, 500, err.message);
-    }
-  },
-    updateBasket: async (req, res) => {
-    try {
-      const basketDetails = await Model.Basket.findById(req.body.basketId);
-      if(req.body.basket_type){
-        const isDublicateName = await Model.Basket.findOne({basket_type: req.body.basket_type, box_type: basketDetails.box_type, _id:{$ne: basketDetails?._id}});
-        if(isDublicateName){
-          return errorRes(res, 400, "This basket already exists")
-        }
-      }
-      const updateData = await Model.Basket.findByIdAndUpdate(
-        req.body.basketId,
-        { $set: { ...req.body } },
-        { new: true }
-      );
-      if (!updateData) {
-        return errorRes(res, 404, "Basket details not found");
-      }
-      return successRes(
-        res,
-        200,
-        "Basket updated successfully",
-        updateData
-      );
-    } catch (err) {
-      return errorRes(res, 500, err.message);
-    }
-  },
-  addBasket: async (req, res) => {
-    try {
-      const noOfBasket = await Model.Basket.find({box_type: req.body.box_type});
-      if(noOfBasket.length > 4){
-        return errorRes(res, 400, "Only 4 basket is allowed")
-      }
-      const isBasketAlreadyExists = await Model.Basket.findOne({box_type: req.body.box_type, basket_type: req.body.basket_type});
-      if(isBasketAlreadyExists){
-        return errorRes(res, 400, "This basket already exists")
-      }
-      const addData = await Model.Basket.create({
-        ...req.body
-      });
-     
-      return successRes(res, 200, "Basket added successfully", addData);
-    } catch (err) {
-      return errorRes(res, 500, err.message);
-    }
-  },
- delBasket: async (req, res) => {
-    try {
-      const delData = await Model.Basket.findByIdAndDelete(req.params.basketId);
-     if(!delData){
-        return errorRes(res, 404, "Basket details not found")
-     }
-      return successRes(res, 200, "Basket deleted successfully", delData);
-    } catch (err) {
-      return errorRes(res, 500, err.message);
-    }
-  },
-  getBaskets: async (req, res) => {
-    try {
-      const allBasktets = await Model.Basket.find({}).sort({
-        createdAt: -1,
-      });
-      return successRes(
-        res,
-        200,
-        "Basket list fetched successfully",
-        allBasktets
-      );
-    } catch (err) {
-      return errorRes(res, 500, err.message);
-    }
-  },
-  getBasketDetails: async (req, res) => {
-    try {
-      const { basketId } = req.params;
-      const basketDetails = await Model.Basket.findById(basketId).populate({path:"products_added.product", select:"product_name product_image"});
-      if (!basketDetails) {
-        return errorRes(res, 404, "Basket details not found");
-      }
-      return successRes(
-        res,
-        200,
-        "Basket details fetched successfully",
-        basketDetails
-      );
+      return successRes(res, 200, "Admin Data Successfully Registered", newAdmin);
     } catch (err) {
       return errorRes(res, 500, err.message);
     }
   },
 
-   addPromocode: async (req, res) => {
+  adminLogin: async (req, res) => {
     try {
-      const addData = await Model.PromoCode.create({
-        ...req.body
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return errorRes(res, 400, "Email and password are required");
+      }
+
+      const admin = await Model.Admin.findOne({ email: email.toLowerCase() });
+      if (!admin) {
+        return errorRes(res, 404, "User not Found");
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, admin.password);
+      if (!isPasswordValid) {
+        return errorRes(res, 400, "Invalid Password");
+      }
+
+      if (!JWT_SECRET_KEY) {
+        console.error("JWT_SECRET_KEY is not defined");
+        return errorRes(res, 500, "JWT secret key is not configured");
+      }
+
+      const token = JWT.sign({ userId: admin._id }, JWT_SECRET_KEY, {
+        expiresIn: "30d",
       });
-     
-      return successRes(res, 200, "Promo code added successfully", addData);
+
+      return successRes(res, 200, "User Successfully Login", {
+        Admin: admin,
+        token,
+      });
     } catch (err) {
       return errorRes(res, 500, err.message);
     }
   },
-    updatePromocode: async (req, res) => {
+
+  changePassword: async (req, res) => {
     try {
-      const updateData = await Model.PromoCode.findByIdAndUpdate(
-        req.body.promoId,
+      const adminId = req.user._id;
+      const currentPassword = req.body.oldPassword;
+      const password = req.body.newPassword;
+
+      const admin = await Model.Admin.findById(adminId);
+      if (!admin) {
+        return errorRes(res, 404, "Admin Not Found");
+      }
+
+      const isPasswordValid = await bcrypt.compare(currentPassword, admin.password);
+      if (!isPasswordValid) {
+        return errorRes(res, 400, "Incorrect Old Password");
+      }
+
+      const isPasswordSame = await bcrypt.compare(password, admin.password);
+      if (isPasswordSame) {
+        return errorRes(res, 400, "Old Password and New Password should not be the same");
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const updatedAdmin = await Model.Admin.findByIdAndUpdate(
+        adminId,
+        { $set: { password: hashedPassword } },
+        { new: true }
+      );
+      return successRes(res, 200, "Password Changed Successfully", updatedAdmin);
+    } catch (err) {
+      return errorRes(res, 500, err.message);
+    }
+  },
+
+  forgotpassword: async (req, res) => {
+    try {
+      const email = req.body.email?.toLowerCase();
+      const admin = await Model.Admin.findOne({ email });
+      if (!admin) {
+        return errorRes(res, 404, "Invalid Email");
+      }
+      const otp = Math.floor(1000 + Math.random() * 9000);
+      await Model.Admin.findByIdAndUpdate(admin._id, { $set: { otp } });
+      await sendEmailOtp(email, otp);
+      return successRes(res, 200, "OTP has been sent to your provided email", { email });
+    } catch (err) {
+      return errorRes(res, 500, err.message);
+    }
+  },
+
+  resetPassword: async (req, res) => {
+    try {
+      const { userId, email, password } = req.body;
+      if (!password) {
+        return errorRes(res, 400, "New Password is Required");
+      }
+
+      const admin = userId
+        ? await Model.Admin.findById(userId)
+        : await Model.Admin.findOne({ email: email?.toLowerCase() });
+      if (!admin) {
+        return errorRes(res, 404, "Admin not found");
+      }
+
+      const isPasswordSame = await bcrypt.compare(password, admin.password);
+      if (isPasswordSame) {
+        return errorRes(res, 400, "Old Password and New Password should not be the same");
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const updatedAdmin = await Model.Admin.findByIdAndUpdate(
+        admin._id,
+        { $set: { password: hashedPassword, otp: null } },
+        { new: true }
+      );
+      return successRes(res, 200, "Password Changed Successfully", updatedAdmin);
+    } catch (err) {
+      return errorRes(res, 500, err.message);
+    }
+  },
+
+  resendOTP: async (req, res) => {
+    try {
+      const email = req.body.email?.toLowerCase();
+      const admin = await Model.Admin.findOne({ email });
+      if (!admin) {
+        return errorRes(res, 404, "Admin not found");
+      }
+      const otp = Math.floor(1000 + Math.random() * 9000);
+      await Model.Admin.findByIdAndUpdate(admin._id, { $set: { otp } });
+      await sendEmailOtp(email, otp);
+      return successRes(res, 200, "New OTP sent successfully.", { email, otp });
+    } catch (err) {
+      return errorRes(res, 500, err.message);
+    }
+  },
+
+  verifyOTP: async (req, res) => {
+    try {
+      const email = req.body.email?.toLowerCase();
+      const enteredOTP = req.body.otp;
+      const admin = await Model.Admin.findOne({ email });
+      if (!admin) {
+        return errorRes(res, 404, "Admin not found");
+      }
+      if (enteredOTP == admin.otp) {
+        const token = JWT.sign({ userId: admin._id }, JWT_SECRET_KEY, {
+          expiresIn: "30d",
+        });
+        admin.otp = null;
+        await admin.save();
+        const response = {
+          ...admin.toObject(),
+          token,
+        };
+        return successRes(res, 200, "OTP verified successfully.", response);
+      }
+      return errorRes(res, 400, "Invalid OTP or OTP has expired.");
+    } catch (err) {
+      return errorRes(res, 500, err.message);
+    }
+  },
+
+  getProfile: async (req, res) => {
+    try {
+      const adminData = await Model.Admin.findById(req.user._id);
+      if (!adminData) {
+        return errorRes(res, 404, "Admin not found");
+      }
+      return successRes(res, 200, "Admin Details", adminData);
+    } catch (err) {
+      return errorRes(res, 500, err.message);
+    }
+  },
+
+  editProfile: async (req, res) => {
+    try {
+      if (req?.files && req?.files?.profile_image) {
+        req.body.profile_image = `public/${req.files.profile_image[0].filename}`;
+      }
+      const updateProfile = await Model.Admin.findByIdAndUpdate(
+        req.user._id,
         { $set: { ...req.body } },
         { new: true }
       );
-      if (!updateData) {
-        return errorRes(res, 404, "Promo details not found");
+      if (!updateProfile) {
+        return errorRes(res, 404, "Admin not found");
       }
-      return successRes(
-        res,
-        200,
-        "Promo code updated successfully",
-        updateData
-      );
+      return successRes(res, 200, "Profile updated successfully", updateProfile);
     } catch (err) {
       return errorRes(res, 500, err.message);
     }
   },
- delPromocode: async (req, res) => {
-    try {
-      const delData = await Model.PromoCode.findByIdAndDelete(req.params.promoId);
-     if(!delData){
-        return errorRes(res, 404, "Promo details not found")
-     }
-      return successRes(res, 200, "Promo code deleted successfully", delData);
-    } catch (err) {
-      return errorRes(res, 500, err.message);
-    }
-  },
-  getPromocodes: async (req, res) => {
-    try {
-      const allBasktets = await Model.PromoCode.find({}).sort({
-        createdAt: -1,
-      });
-      return successRes(
-        res,
-        200,
-        "Promo code list fetched successfully",
-        allBasktets
-      );
-    } catch (err) {
-      return errorRes(res, 500, err.message);
-    }
-  },
-  getPromoDetails: async (req, res) => {
-    try {
-      const { promoId } = req.params;
-      const promoDetails = await Model.PromoCode.findById(promoId);
-      if (!promoDetails) {
-        return errorRes(res, 404, "Promo details not found");
-      }
-      return successRes(
-        res,
-        200,
-        "Promo details fetched successfully",
-        promoDetails
-      );
-    } catch (err) {
-      return errorRes(res, 500, err.message);
-    }
-  },
-}
+
+
+};
 
 export default adminServices;
