@@ -117,13 +117,14 @@ const adminServices = {
 
   forgotpassword: async (req, res) => {
     try {
+      console.log("Forgot Password Request Body:", req.body);
       const email = req.body.email?.toLowerCase();
       const admin = await Model.Admin.findOne({ email });
       if (!admin) {
         return errorRes(res, 404, "Invalid Email");
       }
       const otp = Math.floor(1000 + Math.random() * 9000);
-      const updatedAdmin = await Model.Admin.findByIdAndUpdate(admin._id, { $set: { otp } });
+      const updatedAdmin = await Model.Admin.findByIdAndUpdate(admin._id, { $set: { otp } },{new: true});
       // await sendEmailOtp(email, otp);
       return successRes(res, 200, "OTP has been sent to your provided email", updatedAdmin);
     } catch (err) {
@@ -170,9 +171,9 @@ const adminServices = {
         return errorRes(res, 404, "Admin not found");
       }
       const otp = Math.floor(1000 + Math.random() * 9000);
-      await Model.Admin.findByIdAndUpdate(admin._id, { $set: { otp } });
-      await sendEmailOtp(email, otp);
-      return successRes(res, 200, "New OTP sent successfully.", { email, otp });
+      const updatedAdmin = await Model.Admin.findByIdAndUpdate(admin._id, { $set: { otp } },{new: true});
+      // await sendEmailOtp(email, otp);
+      return successRes(res, 200, "New OTP sent successfully.", updatedAdmin);
     } catch (err) {
       return errorRes(res, 500, err.message);
     }
@@ -182,7 +183,9 @@ const adminServices = {
     try {
      const {userId} = req.body;
       const enteredOTP = req.body.otp;
+      console.log("Verifying OTP for User ID:", userId, "Entered OTP:", enteredOTP);
       const admin = await Model.Admin.findById(userId);
+      console.log("Admin found for OTP verification:", admin);
       if (!admin) {
         return errorRes(res, 404, "Admin not found");
       }
