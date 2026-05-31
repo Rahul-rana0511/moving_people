@@ -123,9 +123,9 @@ const adminServices = {
         return errorRes(res, 404, "Invalid Email");
       }
       const otp = Math.floor(1000 + Math.random() * 9000);
-      await Model.Admin.findByIdAndUpdate(admin._id, { $set: { otp } });
-      await sendEmailOtp(email, otp);
-      return successRes(res, 200, "OTP has been sent to your provided email", { email });
+      const updatedAdmin = await Model.Admin.findByIdAndUpdate(admin._id, { $set: { otp } });
+      // await sendEmailOtp(email, otp);
+      return successRes(res, 200, "OTP has been sent to your provided email", updatedAdmin);
     } catch (err) {
       return errorRes(res, 500, err.message);
     }
