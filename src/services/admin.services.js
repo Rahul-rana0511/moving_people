@@ -180,9 +180,9 @@ const adminServices = {
 
   verifyOTP: async (req, res) => {
     try {
-      const email = req.body.email?.toLowerCase();
+     const {userId} = req.body;
       const enteredOTP = req.body.otp;
-      const admin = await Model.Admin.findOne({ email });
+      const admin = await Model.Admin.findById(userId);
       if (!admin) {
         return errorRes(res, 404, "Admin not found");
       }
