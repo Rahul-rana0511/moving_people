@@ -238,6 +238,48 @@ const adminServices = {
     }
   },
 
+  getContactUsList: async (req, res) => {
+    try {
+      const { page = 1, limit = 20, object_type, is_read } = req.query;
+      const query = {};
+      if (object_type !== undefined) {
+        query.object_type = Number(object_type);
+      }
+      if (is_read !== undefined) {
+        query.is_read = Number(is_read);
+      }
+
+      const pageNum = Number(page) || 1;
+      const limitNum = Number(limit) || 20;
+      const contacts = await Model.ContactUs.find(query)
+        .sort({ createdAt: -1 })
+        .skip((pageNum - 1) * limitNum)
+        .limit(limitNum);
+      const total = await Model.ContactUs.countDocuments(query);
+
+      return successRes(res, 200, "Contact submissions fetched successfully", {
+        count: contacts.length,
+        total,
+        page: pageNum,
+        limit: limitNum,
+        data: contacts,
+      });
+    } catch (err) {
+      return errorRes(res, 500, err.message);
+    }
+  },
+
+  getContactUsDetail: async (req, res) => {
+    try {
+      const contact = await Model.ContactUs.findById(req.params.id);
+      if (!contact) {
+        return errorRes(res, 404, "Contact submission not found");
+      }
+      return successRes(res, 200, "Contact submission details fetched successfully", contact);
+    } catch (err) {
+      return errorRes(res, 500, err.message);
+    }
+  },
 
 };
 

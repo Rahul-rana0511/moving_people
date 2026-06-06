@@ -11,7 +11,9 @@ import {
   resetPassword,
   verifyOTP,
   resendOTP,
-  getProfile
+  getProfile,
+  getContactUsList,
+  getContactUsDetail,
 } from "../controllers/admin.controller.js";
 import { uploadMiddleware } from "../middlewares/multer.js";
 router.route("/register").get(createSuperAdmin);
@@ -23,6 +25,8 @@ router.route("/resendOtp").post(resendOTP);
 router.route("/verifyotp").post(verifyOTP);
 
 router.use(authentication);
+router.route("/contact-us").get(getContactUsList);
+router.route("/contact-us/:id").get(getContactUsDetail);
 router.route("/getProfile").get(getProfile);
 router.route("/editProfile").put(uploadMiddleware, editProfile);
 router.route("/changePassword").patch(changePassword);

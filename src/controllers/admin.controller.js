@@ -32,6 +32,14 @@ const verifyOTP = async (req, res) => {
   await adminServices.verifyOTP(req, res);
 };
 
+const getContactUsList = async (req, res) => {
+  await adminServices.getContactUsList(req, res);
+};
+
+const getContactUsDetail = async (req, res) => {
+  await adminServices.getContactUsDetail(req, res);
+};
+
 const getProfile = async (req, res) => {
   await adminServices.getProfile(req, res);
 };
@@ -46,6 +54,8 @@ export {
   adminLogin,
   changePassword,
   forgotpassword,
+  getContactUsList,
+  getContactUsDetail,
   getProfile,
   editProfile,
   resetPassword,

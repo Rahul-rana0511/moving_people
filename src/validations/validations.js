@@ -394,8 +394,18 @@ export const validations = {
   },
   validateContactUs: (req, res, next) => {
     const schema = Joi.object({
+      name: Joi.string().required(),
+      surname: Joi.string().required(),
       email: Joi.string().email().required(),
+      telephone_number: Joi.string().required(),
+      object_type: Joi.number().valid(0, 1, 2, 3, 4, 5).required(),
+      service_of_interest: Joi.number().optional(),
+      preferred_contact_method: Joi.number().valid(0,1, 2, 3).required(),
       message: Joi.string().required(),
+      is_read: Joi.number().valid(0, 1).optional(),
+      consent_share_data_for_advertising: Joi.number().valid(0, 1).optional(),
+      consent_third_party_promotional: Joi.number().valid(0, 1).optional(),
+      consent_for_contact: Joi.number().valid(0, 1).optional(),
     });
 
     const { error } = schema.validate(req.body);
