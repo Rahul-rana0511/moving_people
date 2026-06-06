@@ -240,13 +240,34 @@ const adminServices = {
 
   getContactUsList: async (req, res) => {
     try {
-      const { page = 1, limit = 20, object_type, is_read } = req.query;
+      const { page = 1, limit = 20, object_type, is_read, search } = req.query;
       const query = {};
       if (object_type !== undefined) {
         query.object_type = Number(object_type);
       }
       if (is_read !== undefined) {
         query.is_read = Number(is_read);
+      }
+
+      // Add full-text-like search across common fields
+      if (search !== undefined && String(search).trim() !== "") {
+        const s = String(search).trim();
+        const regex = new RegExp(s.replace(/[.*+?^${}()|[\\]\\]/g, "\\$&"), "i");
+        const or = [
+          { name: regex },
+          { surname: regex },
+          { email: regex },
+          { telephone_number: regex },
+          { message: regex },
+        ];
+
+        // If search is a number, also allow matching numeric enum fields
+        if (/^\\d+$/.test(s)) {
+          const n = Number(s);
+          or.push({ object_type: n }, { preferred_contact_method: n }, { is_read: n });
+        }
+
+        query.$or = or;
       }
 
       const pageNum = Number(page) || 1;
