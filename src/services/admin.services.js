@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 // import sendEmailOtp from "../utils/sendEmailOtp.js";
 import "dotenv/config";
 
+
 const JWT_SECRET_KEY = process.env.JWT_SECRET;
 
 const adminServices = {
