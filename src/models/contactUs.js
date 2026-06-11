@@ -26,6 +26,12 @@ const contactUsSchema = new Schema(
       description:
         "0 -> Appointment, 1 -> Request info, 2 -> Document assistance, 3 -> Status of practice, 4 -> General request, 5 -> Others",
     },
+    status: {
+      type: Number,
+      default: 0,
+      description:
+        "0 -> New, 1 -> In Progress, 2 -> Resolved"
+    },
     service_of_interest: {
       type: Number,
       default: 0,

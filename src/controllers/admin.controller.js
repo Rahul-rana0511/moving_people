@@ -47,6 +47,21 @@ const getProfile = async (req, res) => {
 const editProfile = async (req, res) => {
   await adminServices.editProfile(req, res);
 };
+const getContactUsDashboard = async (req, res) => {
+  await adminServices.getContactUsDashboard(req, res);
+};
+const updateContactUsStatus = async (req, res) => {
+  await adminServices.updateContactUsStatus(req, res);
+};
+const deleteContactUs = async (req, res) => {
+  await adminServices.deleteContactUs(req, res);
+};
+const getEnquiryTypeChart = async (req, res) => {
+  await adminServices.getEnquiryTypeChart(req, res);
+};
+const getLastSixMonthsEnquiriesChart = async (req, res) => {
+  await adminServices.getLastSixMonthsEnquiriesChart(req, res);
+};
 
 export {
   createSuperAdmin,
@@ -60,5 +75,10 @@ export {
   editProfile,
   resetPassword,
   verifyOTP,
+  updateContactUsStatus,
+  deleteContactUs,
+  getContactUsDashboard,
+  getEnquiryTypeChart,
+  getLastSixMonthsEnquiriesChart,
   resendOTP,
 };

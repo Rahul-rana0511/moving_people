@@ -14,6 +14,11 @@ import {
   getProfile,
   getContactUsList,
   getContactUsDetail,
+  getContactUsDashboard,
+  updateContactUsStatus,
+  deleteContactUs,
+  getEnquiryTypeChart,
+  getLastSixMonthsEnquiriesChart
 } from "../controllers/admin.controller.js";
 import { uploadMiddleware } from "../middlewares/multer.js";
 router.route("/register").get(createSuperAdmin);
@@ -30,5 +35,9 @@ router.route("/contact-us/:id").get(getContactUsDetail);
 router.route("/getProfile").get(getProfile);
 router.route("/editProfile").put(uploadMiddleware, editProfile);
 router.route("/changePassword").patch(changePassword);
-
+router.route("/contact-us/:id/status").patch(updateContactUsStatus);
+router.route("/contact-us/:id").delete(deleteContactUs);
+router.route("/dashboard").get(getContactUsDashboard);
+router.route("/enquiry-type-chart").get(getEnquiryTypeChart);
+router.route("/last-six-months-chart").get(getLastSixMonthsEnquiriesChart);
 export default router;

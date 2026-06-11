@@ -240,7 +240,7 @@ const adminServices = {
 
   getContactUsList: async (req, res) => {
     try {
-      const { page = 1, limit = 20, object_type, is_read, search } = req.query;
+      const { page = 1, limit = 20, object_type, is_read, search, status } = req.query;
       const query = {};
       if (object_type !== undefined) {
         query.object_type = Number(object_type);
@@ -248,7 +248,9 @@ const adminServices = {
       if (is_read !== undefined) {
         query.is_read = Number(is_read);
       }
-
+  if (status !== undefined) {
+        query.status = Number(status);
+      }
       // Add full-text-like search across common fields
       if (search !== undefined && String(search).trim() !== "") {
         const s = String(search).trim();
@@ -301,7 +303,321 @@ const adminServices = {
       return errorRes(res, 500, err.message);
     }
   },
+getContactUsDashboard: async (req, res) => {
+  try {
+    const now = new Date();
 
+    // Current Month
+    const currentMonthStart = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      1
+    );
+
+    const nextMonthStart = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      1
+    );
+
+    // Last Month
+    const lastMonthStart = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      1
+    );
+
+    // Today
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const tomorrowStart = new Date(todayStart);
+    tomorrowStart.setDate(tomorrowStart.getDate() + 1);
+
+    const [
+      totalEnquiries,
+      newEnquiries,
+      inProgressEnquiries,
+      resolvedEnquiries,
+      todayEnquiries,
+      thisMonthEnquiries,
+      lastMonthEnquiries,
+    ] = await Promise.all([
+      Model.ContactUs.countDocuments(),
+
+      Model.ContactUs.countDocuments({
+        status: 0,
+      }),
+
+      Model.ContactUs.countDocuments({
+        status: 1,
+      }),
+
+      Model.ContactUs.countDocuments({
+        status: 2,
+      }),
+
+      Model.ContactUs.countDocuments({
+        createdAt: {
+          $gte: todayStart,
+          $lt: tomorrowStart,
+        },
+      }),
+
+      Model.ContactUs.countDocuments({
+        createdAt: {
+          $gte: currentMonthStart,
+          $lt: nextMonthStart,
+        },
+      }),
+
+      Model.ContactUs.countDocuments({
+        createdAt: {
+          $gte: lastMonthStart,
+          $lt: currentMonthStart,
+        },
+      }),
+    ]);
+
+    let monthlyGrowth = 0;
+
+    if (lastMonthEnquiries > 0) {
+      monthlyGrowth =
+        ((thisMonthEnquiries - lastMonthEnquiries) /
+          lastMonthEnquiries) *
+        100;
+    } else if (thisMonthEnquiries > 0) {
+      monthlyGrowth = 100;
+    }
+
+    const comparison = {
+      current_month_enquiries: thisMonthEnquiries,
+      last_month_enquiries: lastMonthEnquiries,
+      difference: thisMonthEnquiries - lastMonthEnquiries,
+      percentage_change: Number(monthlyGrowth.toFixed(2)),
+      trend: thisMonthEnquiries >= lastMonthEnquiries ? "up" : "down",
+    };
+
+    return successRes(
+      res,
+      200,
+      "Dashboard data fetched successfully",
+      {
+        total_enquiries: totalEnquiries,
+
+        new_enquiries: newEnquiries,
+
+        in_progress_enquiries: inProgressEnquiries,
+
+        resolved_enquiries: resolvedEnquiries,
+
+        today_enquiries: todayEnquiries,
+
+        this_month_enquiries: thisMonthEnquiries,
+
+        last_month_enquiries: lastMonthEnquiries,
+
+        monthly_growth_percentage:
+          Number(monthlyGrowth.toFixed(2)),
+
+        comparison,
+      }
+    );
+  } catch (err) {
+    return errorRes(res, 500, err.message);
+  }
+},
+updateContactUsStatus: async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (![0, 1, 2].includes(Number(status))) {
+      return errorRes(
+        res,
+        400,
+        "Status must be 0, 1 or 2"
+      );
+    }
+
+    const contact = await Model.ContactUs.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          status: Number(status),
+        },
+      },
+      { new: true }
+    );
+
+    if (!contact) {
+      return errorRes(
+        res,
+        404,
+        "Enquiry not found"
+      );
+    }
+
+    return successRes(
+      res,
+      200,
+      "Status updated successfully",
+      contact
+    );
+  } catch (err) {
+    return errorRes(res, 500, err.message);
+  }
+},
+deleteContactUs: async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const contact = await Model.ContactUs.findByIdAndDelete(id);
+
+    if (!contact) {
+      return errorRes(
+        res,
+        404,
+        "Enquiry not found"
+      );
+    }
+
+    return successRes(
+      res,
+      200,
+      "Enquiry deleted successfully"
+    );
+  } catch (err) {
+    return errorRes(res, 500, err.message);
+  }
+},
+getEnquiryTypeChart: async (req, res) => {
+  try {
+    const objectTypeLabels = {
+      0: "Appointment",
+      1: "Request Info",
+      2: "Document Assistance",
+      3: "Status Of Practice",
+      4: "General Request",
+      5: "Others",
+    };
+
+    const totalEnquiries = await Model.ContactUs.countDocuments();
+
+    const result = await Model.ContactUs.aggregate([
+      {
+        $group: {
+          _id: "$object_type",
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ]);
+
+    const chartData = result.map((item) => ({
+      object_type: item._id,
+      label: objectTypeLabels[item._id],
+      count: item.count,
+      percentage:
+        totalEnquiries > 0
+          ? Number(
+              ((item.count / totalEnquiries) * 100).toFixed(2)
+            )
+          : 0,
+    }));
+
+    return successRes(
+      res,
+      200,
+      "Enquiry type chart data fetched successfully",
+      chartData
+    );
+  } catch (err) {
+    return errorRes(res, 500, err.message);
+  }
+},
+getLastSixMonthsEnquiriesChart: async (req, res) => {
+  try {
+    const now = new Date();
+
+    const sixMonthsAgo = new Date(
+      now.getFullYear(),
+      now.getMonth() - 5,
+      1
+    );
+
+    const result = await Model.ContactUs.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: sixMonthsAgo,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" },
+          },
+          total: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1,
+        },
+      },
+    ]);
+
+    const months = [];
+
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(
+        now.getFullYear(),
+        now.getMonth() - i,
+        1
+      );
+
+      months.push({
+        year: d.getFullYear(),
+        month: d.getMonth() + 1,
+        label: d.toLocaleString("en-US", {
+          month: "short",
+        }),
+      });
+    }
+
+    const chartData = months.map((m) => {
+      const found = result.find(
+        (r) =>
+          r._id.year === m.year &&
+          r._id.month === m.month
+      );
+
+      return {
+        month: m.label,
+        enquiries: found ? found.total : 0,
+      };
+    });
+
+    return successRes(
+      res,
+      200,
+      "Last 6 months enquiry chart data fetched successfully",
+      chartData
+    );
+  } catch (err) {
+    return errorRes(res, 500, err.message);
+  }
+},
 };
 
 export default adminServices;
