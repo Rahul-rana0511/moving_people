@@ -334,6 +334,16 @@ getContactUsDashboard: async (req, res) => {
     const tomorrowStart = new Date(todayStart);
     tomorrowStart.setDate(tomorrowStart.getDate() + 1);
 
+    const calculateGrowth = (current, previous) => {
+      if (previous > 0) {
+        return Number(
+          (((current - previous) / previous) * 100).toFixed(2)
+        );
+      }
+
+      return current > 0 ? 100 : 0;
+    };
+
     const [
       totalEnquiries,
       newEnquiries,
@@ -342,7 +352,20 @@ getContactUsDashboard: async (req, res) => {
       todayEnquiries,
       thisMonthEnquiries,
       lastMonthEnquiries,
+
+      totalCurrentMonth,
+      totalLastMonth,
+
+      newCurrentMonth,
+      newLastMonth,
+
+      inProgressCurrentMonth,
+      inProgressLastMonth,
+
+      resolvedCurrentMonth,
+      resolvedLastMonth,
     ] = await Promise.all([
+      // Dashboard totals
       Model.ContactUs.countDocuments(),
 
       Model.ContactUs.countDocuments({
@@ -377,26 +400,98 @@ getContactUsDashboard: async (req, res) => {
           $lt: currentMonthStart,
         },
       }),
+
+      // Total enquiries comparison
+      Model.ContactUs.countDocuments({
+        createdAt: {
+          $gte: currentMonthStart,
+          $lt: nextMonthStart,
+        },
+      }),
+
+      Model.ContactUs.countDocuments({
+        createdAt: {
+          $gte: lastMonthStart,
+          $lt: currentMonthStart,
+        },
+      }),
+
+      // New enquiries comparison
+      Model.ContactUs.countDocuments({
+        status: 0,
+        createdAt: {
+          $gte: currentMonthStart,
+          $lt: nextMonthStart,
+        },
+      }),
+
+      Model.ContactUs.countDocuments({
+        status: 0,
+        createdAt: {
+          $gte: lastMonthStart,
+          $lt: currentMonthStart,
+        },
+      }),
+
+      // In Progress comparison
+      Model.ContactUs.countDocuments({
+        status: 1,
+        createdAt: {
+          $gte: currentMonthStart,
+          $lt: nextMonthStart,
+        },
+      }),
+
+      Model.ContactUs.countDocuments({
+        status: 1,
+        createdAt: {
+          $gte: lastMonthStart,
+          $lt: currentMonthStart,
+        },
+      }),
+
+      // Resolved comparison
+      Model.ContactUs.countDocuments({
+        status: 2,
+        createdAt: {
+          $gte: currentMonthStart,
+          $lt: nextMonthStart,
+        },
+      }),
+
+      Model.ContactUs.countDocuments({
+        status: 2,
+        createdAt: {
+          $gte: lastMonthStart,
+          $lt: currentMonthStart,
+        },
+      }),
     ]);
 
-    let monthlyGrowth = 0;
+    const totalGrowth = calculateGrowth(
+      totalCurrentMonth,
+      totalLastMonth
+    );
 
-    if (lastMonthEnquiries > 0) {
-      monthlyGrowth =
-        ((thisMonthEnquiries - lastMonthEnquiries) /
-          lastMonthEnquiries) *
-        100;
-    } else if (thisMonthEnquiries > 0) {
-      monthlyGrowth = 100;
-    }
+    const newGrowth = calculateGrowth(
+      newCurrentMonth,
+      newLastMonth
+    );
 
-    const comparison = {
-      current_month_enquiries: thisMonthEnquiries,
-      last_month_enquiries: lastMonthEnquiries,
-      difference: thisMonthEnquiries - lastMonthEnquiries,
-      percentage_change: Number(monthlyGrowth.toFixed(2)),
-      trend: thisMonthEnquiries >= lastMonthEnquiries ? "up" : "down",
-    };
+    const inProgressGrowth = calculateGrowth(
+      inProgressCurrentMonth,
+      inProgressLastMonth
+    );
+
+    const resolvedGrowth = calculateGrowth(
+      resolvedCurrentMonth,
+      resolvedLastMonth
+    );
+
+    const monthlyGrowth = calculateGrowth(
+      thisMonthEnquiries,
+      lastMonthEnquiries
+    );
 
     return successRes(
       res,
@@ -404,23 +499,34 @@ getContactUsDashboard: async (req, res) => {
       "Dashboard data fetched successfully",
       {
         total_enquiries: totalEnquiries,
+        total_growth_percentage: totalGrowth,
 
         new_enquiries: newEnquiries,
+        new_growth_percentage: newGrowth,
 
         in_progress_enquiries: inProgressEnquiries,
+        in_progress_growth_percentage: inProgressGrowth,
 
         resolved_enquiries: resolvedEnquiries,
+        resolved_growth_percentage: resolvedGrowth,
 
         today_enquiries: todayEnquiries,
 
         this_month_enquiries: thisMonthEnquiries,
-
         last_month_enquiries: lastMonthEnquiries,
+        monthly_growth_percentage: monthlyGrowth,
 
-        monthly_growth_percentage:
-          Number(monthlyGrowth.toFixed(2)),
-
-        comparison,
+        comparison: {
+          current_month_enquiries: thisMonthEnquiries,
+          last_month_enquiries: lastMonthEnquiries,
+          difference:
+            thisMonthEnquiries - lastMonthEnquiries,
+          percentage_change: monthlyGrowth,
+          trend:
+            thisMonthEnquiries >= lastMonthEnquiries
+              ? "up"
+              : "down",
+        },
       }
     );
   } catch (err) {
