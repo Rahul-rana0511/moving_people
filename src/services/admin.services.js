@@ -599,16 +599,16 @@ deleteContactUs: async (req, res) => {
 },
 getEnquiryTypeChart: async (req, res) => {
   try {
-  const objectTypeLabels = {
-  0: "Immigration Services",
-  1: "CAF & Patronage",
-  2: "Training & Courses",
-  3: "Business Consulting",
-  4: "Insurance",
-  5: "Indian Consulate",
-  6: "International Visas",
-  7: "Other Services",
-};
+    const objectTypeLabels = {
+      0: "Immigration Services",
+      1: "CAF & Patronage",
+      2: "Training & Courses",
+      3: "Business Consulting",
+      4: "Insurance",
+      5: "Indian Consulate",
+      6: "International Visas",
+      7: "Other Services",
+    };
 
     const totalEnquiries = await Model.ContactUs.countDocuments();
 
@@ -619,24 +619,32 @@ getEnquiryTypeChart: async (req, res) => {
           count: { $sum: 1 },
         },
       },
-      {
-        $sort: {
-          _id: 1,
-        },
-      },
     ]);
 
-    const chartData = result.map((item) => ({
-      service_of_interest: item._id,
-      label: objectTypeLabels[item._id],
-      count: item.count,
-      percentage:
-        totalEnquiries > 0
-          ? Number(
-              ((item.count / totalEnquiries) * 100).toFixed(2)
-            )
-          : 0,
+    // Create default response with all services
+    const chartData = Object.keys(objectTypeLabels).map((key) => ({
+      service_of_interest: Number(key),
+      label: objectTypeLabels[key],
+      count: 0,
+      percentage: 0,
     }));
+
+    // Update counts from aggregation result
+    result.forEach((item) => {
+      const index = chartData.findIndex(
+        (x) => x.service_of_interest === item._id
+      );
+
+      if (index !== -1) {
+        chartData[index].count = item.count;
+        chartData[index].percentage =
+          totalEnquiries > 0
+            ? Number(
+                ((item.count / totalEnquiries) * 100).toFixed(2)
+              )
+            : 0;
+      }
+    });
 
     return successRes(
       res,
