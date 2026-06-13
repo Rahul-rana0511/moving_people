@@ -599,21 +599,23 @@ deleteContactUs: async (req, res) => {
 },
 getEnquiryTypeChart: async (req, res) => {
   try {
-    const objectTypeLabels = {
-      0: "Appointment",
-      1: "Request Info",
-      2: "Document Assistance",
-      3: "Status Of Practice",
-      4: "General Request",
-      5: "Others",
-    };
+  const objectTypeLabels = {
+  0: "Immigration Services",
+  1: "CAF & Patronage",
+  2: "Training & Courses",
+  3: "Business Consulting",
+  4: "Insurance",
+  5: "Indian Consulate",
+  6: "International Visas",
+  7: "Other Services",
+};
 
     const totalEnquiries = await Model.ContactUs.countDocuments();
 
     const result = await Model.ContactUs.aggregate([
       {
         $group: {
-          _id: "$object_type",
+          _id: "$service_of_interest",
           count: { $sum: 1 },
         },
       },
@@ -625,7 +627,7 @@ getEnquiryTypeChart: async (req, res) => {
     ]);
 
     const chartData = result.map((item) => ({
-      object_type: item._id,
+      service_of_interest: item._id,
       label: objectTypeLabels[item._id],
       count: item.count,
       percentage:
