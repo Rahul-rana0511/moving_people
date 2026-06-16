@@ -20,6 +20,10 @@ const forgotpassword = async (req, res) => {
   await adminServices.forgotpassword(req, res);
 };
 
+const createEmployee = async (req, res) => {
+  await adminServices.createEmployee(req, res);
+};
+
 const resetPassword = async (req, res) => {
   await adminServices.resetPassword(req, res);
 };
@@ -38,6 +42,22 @@ const getContactUsList = async (req, res) => {
 
 const getContactUsDetail = async (req, res) => {
   await adminServices.getContactUsDetail(req, res);
+};
+
+const assignContactToEmployee = async (req, res) => {
+  await adminServices.assignContactToEmployee(req, res);
+};
+
+const addContactNote = async (req, res) => {
+  await adminServices.addContactNote(req, res);
+};
+
+const getContactNotes = async (req, res) => {
+  await adminServices.getContactNotes(req, res);
+};
+
+const getContactHistory = async (req, res) => {
+  await adminServices.getContactHistory(req, res);
 };
 
 const getProfile = async (req, res) => {
@@ -66,9 +86,14 @@ const getLastSixMonthsEnquiriesChart = async (req, res) => {
 export {
   createSuperAdmin,
   createAdmin,
+  createEmployee,
   adminLogin,
   changePassword,
   forgotpassword,
+  assignContactToEmployee,
+  addContactNote,
+  getContactNotes,
+  getContactHistory,
   getContactUsList,
   getContactUsDetail,
   getProfile,

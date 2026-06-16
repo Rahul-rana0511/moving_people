@@ -4,10 +4,15 @@ import authentication from "../middlewares/admin.authentication.js";
 import {
   createSuperAdmin,
   createAdmin,
+  createEmployee,
   adminLogin,
   changePassword,
   editProfile,
   forgotpassword,
+  assignContactToEmployee,
+  addContactNote,
+  getContactNotes,
+  getContactHistory,
   resetPassword,
   verifyOTP,
   resendOTP,
@@ -30,8 +35,13 @@ router.route("/resendOtp").post(resendOTP);
 router.route("/verifyotp").post(verifyOTP);
 
 router.use(authentication);
+router.route("/createEmployee").post(createEmployee);
 router.route("/contact-us").get(getContactUsList);
 router.route("/contact-us/:id").get(getContactUsDetail);
+router.route("/contact-us/:id/assign").patch(assignContactToEmployee);
+router.route("/contact-us/:id/history").get(getContactHistory);
+router.route("/contact-us/:id/notes").get(getContactNotes);
+router.route("/contact-us/notes").post(addContactNote);
 router.route("/getProfile").get(getProfile);
 router.route("/editProfile").put(uploadMiddleware, editProfile);
 router.route("/changePassword").patch(changePassword);

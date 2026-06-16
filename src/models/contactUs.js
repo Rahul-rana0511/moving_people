@@ -32,6 +32,16 @@ const contactUsSchema = new Schema(
       description:
         "0 -> New, 1 -> In Progress, 2 -> Resolved"
     },
+    assigned_employee: {
+      type: Schema.Types.ObjectId,
+      ref: "Admin",
+      default: null,
+    },
+    assigned_by: {
+      type: Schema.Types.ObjectId,
+      ref: "Admin",
+      default: null,
+    },
     service_of_interest: {
       type: Number,
       default: 0,

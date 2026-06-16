@@ -20,6 +20,7 @@ const adminServices = {
         admin_name: "Super admin",
         email: process.env.ADMIN_EMAIL,
         password: hashPassword,
+        role: 1,
       });
 
       const responseObj = admin.toObject();
@@ -40,8 +41,44 @@ const adminServices = {
         email: email.toLowerCase(),
         password: hashPassword,
         otp,
+        role: 2,
       });
       return successRes(res, 200, "Admin Data Successfully Registered", newAdmin);
+    } catch (err) {
+      return errorRes(res, 500, err.message);
+    }
+  },
+
+  createEmployee: async (req, res) => {
+    try {
+      const creatorRole = req.user?.role;
+      if (![1, 2].includes(creatorRole)) {
+        return errorRes(res, 403, "Access denied");
+      }
+
+      const { admin_name, email, password, country_code, phone_number } = req.body;
+      if (!admin_name || !email || !password) {
+        return errorRes(res, 400, "Admin name, email, and password are required");
+      }
+
+      const existingAdmin = await Model.Admin.findOne({ email: email.toLowerCase() });
+      if (existingAdmin) {
+        return errorRes(res, 409, "Email already in use");
+      }
+
+      const hashPassword = await bcrypt.hash(password, 10);
+      const otp = Math.floor(1000 + Math.random() * 9000);
+      const newEmployee = await Model.Admin.create({
+        admin_name,
+        email: email.toLowerCase(),
+        password: hashPassword,
+        otp,
+        role: 3,
+        country_code,
+        phone_number,
+      });
+
+      return successRes(res, 200, "Employee created successfully", newEmployee);
     } catch (err) {
       return errorRes(res, 500, err.message);
     }
@@ -294,11 +331,149 @@ const adminServices = {
 
   getContactUsDetail: async (req, res) => {
     try {
-      const contact = await Model.ContactUs.findById(req.params.id);
+      const contact = await Model.ContactUs.findById(req.params.id)
+        .populate("assigned_employee", "admin_name email role")
+        .populate("assigned_by", "admin_name email role")
+        .lean();
       if (!contact) {
         return errorRes(res, 404, "Contact submission not found");
       }
+      const contactNotes = await Model.Notes.find({ contact_us_id: contact._id })
+        .populate("employee_id", "admin_name email role")
+        .lean();
+      contact.notes = contactNotes;
       return successRes(res, 200, "Contact submission details fetched successfully", contact);
+    } catch (err) {
+      return errorRes(res, 500, err.message);
+    }
+  },
+
+  assignContactToEmployee: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { employee_id } = req.body;
+
+      if (!employee_id) {
+        return errorRes(res, 400, "employee_id is required");
+      }
+
+      const contact = await Model.ContactUs.findById(id);
+      if (!contact) {
+        return errorRes(res, 404, "Contact submission not found");
+      }
+
+      const employee = await Model.Admin.findById(employee_id);
+      if (!employee) {
+        return errorRes(res, 404, "Employee not found");
+      }
+
+      const updateData = {
+        assigned_employee: employee_id,
+        assigned_by: req.user._id,
+      };
+
+      const eventData = {
+        assigned_employee: employee_id,
+      };
+      if (req.body.status !== undefined) {
+        updateData.status = Number(req.body.status);
+        eventData.status = Number(req.body.status);
+      }
+
+      const updatedContact = await Model.ContactUs.findByIdAndUpdate(
+        id,
+        { $set: updateData },
+        { new: true }
+      )
+        .populate("assigned_employee", "admin_name email role")
+        .populate("assigned_by", "admin_name email role");
+
+      await Model.ContactHistory.create({
+        contact_us_id: id,
+        event_type: "assigned",
+        actor_id: req.user._id,
+        description: `Assigned contact to employee ${employee?.admin_name}`,
+        data: eventData,
+      });
+
+      return successRes(res, 200, "Contact assigned successfully", updatedContact);
+    } catch (err) {
+      return errorRes(res, 500, err.message);
+    }
+  },
+
+  addContactNote: async (req, res) => {
+    try {
+      const { contact_us_id, employee_id, note } = req.body;
+
+      if (!contact_us_id || !employee_id || !note) {
+        return errorRes(res, 400, "contact_us_id, employee_id and note are required");
+      }
+
+      const contact = await Model.ContactUs.findById(contact_us_id);
+      if (!contact) {
+        return errorRes(res, 404, "Contact submission not found");
+      }
+
+      const employee = await Model.Admin.findById(employee_id);
+      if (!employee) {
+        return errorRes(res, 404, "Employee not found");
+      }
+
+      const noteRecord = await Model.Notes.create({
+        contact_us_id,
+        employee_id,
+        note,
+      });
+
+      await Model.ContactHistory.create({
+        contact_us_id,
+        event_type: "note_added",
+        actor_id: req.user._id,
+        description: "Note added to contact ticket",
+        data: {
+          note_id: noteRecord._id,
+          employee_id,
+        },
+      });
+
+      return successRes(res, 200, "Note saved successfully", noteRecord);
+    } catch (err) {
+      return errorRes(res, 500, err.message);
+    }
+  },
+
+  getContactNotes: async (req, res) => {
+    try {
+      const { contact_us_id } = req.query;
+      const query = {};
+      if (contact_us_id) {
+        query.contact_us_id = contact_us_id;
+      }
+
+      const notes = await Model.Notes.find(query)
+        .populate("employee_id", "admin_name email role")
+        .populate("contact_us_id", "name email telephone_number status");
+
+      return successRes(res, 200, "Notes fetched successfully", notes);
+    } catch (err) {
+      return errorRes(res, 500, err.message);
+    }
+  },
+
+  getContactHistory: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const contact = await Model.ContactUs.findById(id);
+      if (!contact) {
+        return errorRes(res, 404, "Contact submission not found");
+      }
+
+      const historyEntries = await Model.ContactHistory.find({ contact_us_id: id })
+        .sort({ created_at: 1 })
+        .populate("actor_id", "admin_name email role");
+
+      return successRes(res, 200, "Contact history fetched successfully", historyEntries);
     } catch (err) {
       return errorRes(res, 500, err.message);
     }
@@ -555,6 +730,18 @@ updateContactUsStatus: async (req, res) => {
       },
       { new: true }
     );
+
+    if (contact) {
+      await Model.ContactHistory.create({
+        contact_us_id: id,
+        event_type: "status_changed",
+        actor_id: req.user._id,
+        description: `Status changed to ${Number(status)}`,
+        data: {
+          status: Number(status),
+        },
+      });
+    }
 
     if (!contact) {
       return errorRes(

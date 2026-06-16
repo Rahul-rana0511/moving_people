@@ -22,6 +22,12 @@ const adminSchema = new Schema(
     password: {
       type: String,
     },
+    role: {
+      type: Number,
+      enum: [1, 2, 3],
+      default: 2,
+      description: "1 -> Super Admin, 2 -> Admin, 3 -> Employee",
+    },
     profile_image: {
       type: String,
     },
