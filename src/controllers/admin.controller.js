@@ -24,6 +24,10 @@ const createEmployee = async (req, res) => {
   await adminServices.createEmployee(req, res);
 };
 
+const getEmployeeList = async (req, res) => {
+  await adminServices.getEmployeeList(req, res);
+};
+
 const resetPassword = async (req, res) => {
   await adminServices.resetPassword(req, res);
 };
@@ -87,6 +91,7 @@ export {
   createSuperAdmin,
   createAdmin,
   createEmployee,
+  getEmployeeList,
   adminLogin,
   changePassword,
   forgotpassword,

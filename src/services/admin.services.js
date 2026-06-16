@@ -12,6 +12,8 @@ const adminServices = {
     try {
       const isAdmin = await Model.Admin.findOne({ email: process.env.ADMIN_EMAIL });
       if (isAdmin) {
+        isAdmin.role = 1;
+        await isAdmin.save();
         return successRes(res, 200, "Admin already created");
       }
 
@@ -79,6 +81,15 @@ const adminServices = {
       });
 
       return successRes(res, 200, "Employee created successfully", newEmployee);
+    } catch (err) {
+      return errorRes(res, 500, err.message);
+    }
+  },
+
+  getEmployeeList: async (req, res) => {
+    try {
+      const employees = await Model.Admin.find({ role: 3 }).sort({ createdAt: -1 });
+      return successRes(res, 200, "Employee list fetched successfully", employees);
     } catch (err) {
       return errorRes(res, 500, err.message);
     }
