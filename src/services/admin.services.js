@@ -290,6 +290,9 @@ const adminServices = {
     try {
       const { page = 1, limit = 20, object_type, is_read, search, status } = req.query;
       const query = {};
+      if (req.user?.role === 3) {
+        query.assigned_employee = req.user._id;
+      }
       if (object_type !== undefined) {
         query.object_type = Number(object_type);
       }
