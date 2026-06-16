@@ -327,6 +327,8 @@ const adminServices = {
       const limitNum = Number(limit) || 20;
       const contacts = await Model.ContactUs.find(query)
         .sort({ createdAt: -1 })
+        .populate("assigned_employee", "admin_name email role")
+        .populate("assigned_by", "admin_name email role")
         .skip((pageNum - 1) * limitNum)
         .limit(limitNum);
       const total = await Model.ContactUs.countDocuments(query);
