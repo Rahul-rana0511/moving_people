@@ -359,7 +359,7 @@ const adminServices = {
             country: {
               $exists: true,
               $ne: null,
-              $ne: "",
+              $nin: ["", " "]
             },
           },
         },
