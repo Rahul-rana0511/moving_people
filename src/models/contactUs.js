@@ -15,6 +15,10 @@ const contactUsSchema = new Schema(
       required: true,
       lowercase: true,
     },
+    country: {
+      type: String,
+      default: null,
+    },
     telephone_number: {
       type: String,
       required: true,

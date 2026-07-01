@@ -397,6 +397,7 @@ export const validations = {
       name: Joi.string().required(),
       surname: Joi.string().required(),
       email: Joi.string().email().required(),
+      country: Joi.string().allow("").allow(null).optional(),
       telephone_number: Joi.string().required(),
       object_type: Joi.number().valid(0, 1, 2, 3, 4, 5).required(),
       service_of_interest: Joi.number().optional(),

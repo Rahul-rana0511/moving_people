@@ -48,6 +48,10 @@ const getContactUsDetail = async (req, res) => {
   await adminServices.getContactUsDetail(req, res);
 };
 
+const getTopContactUsCountries = async (req, res) => {
+  await adminServices.getTopContactUsCountries(req, res);
+};
+
 const assignContactToEmployee = async (req, res) => {
   await adminServices.assignContactToEmployee(req, res);
 };
@@ -101,6 +105,7 @@ export {
   getContactHistory,
   getContactUsList,
   getContactUsDetail,
+  getTopContactUsCountries,
   getProfile,
   editProfile,
   resetPassword,

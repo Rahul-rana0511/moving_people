@@ -288,7 +288,7 @@ const adminServices = {
 
   getContactUsList: async (req, res) => {
     try {
-      const { page = 1, limit = 20, object_type, is_read, search, status } = req.query;
+      const { page = 1, limit = 20, object_type, is_read, search, status, country } = req.query;
       const query = {};
       if (req.user?.role === 3) {
         query.assigned_employee = req.user._id;
@@ -299,8 +299,12 @@ const adminServices = {
       if (is_read !== undefined) {
         query.is_read = Number(is_read);
       }
-  if (status !== undefined) {
+      if (status !== undefined) {
         query.status = Number(status);
+      }
+      if (country !== undefined && String(country).trim() !== "") {
+        const normalizedCountry = String(country).trim();
+        query.country = { $regex: `^${normalizedCountry.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, $options: "i" };
       }
       // Add full-text-like search across common fields
       if (search !== undefined && String(search).trim() !== "") {
@@ -340,6 +344,43 @@ const adminServices = {
         limit: limitNum,
         data: contacts,
       });
+    } catch (err) {
+      return errorRes(res, 500, err.message);
+    }
+  },
+
+  getTopContactUsCountries: async (req, res) => {
+    try {
+      const { limit = 10 } = req.query;
+      const limitNum = Number(limit) || 10;
+      const countries = await Model.ContactUs.aggregate([
+        {
+          $match: {
+            country: {
+              $exists: true,
+              $ne: null,
+              $ne: "",
+            },
+          },
+        },
+        {
+          $group: {
+            _id: { $trim: { input: { $toLower: "$country" } } },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            country: "$_id",
+            count: 1,
+          },
+        },
+        { $sort: { count: -1, country: 1 } },
+        { $limit: limitNum },
+      ]);
+
+      return successRes(res, 200, "Top contact us countries fetched successfully", countries);
     } catch (err) {
       return errorRes(res, 500, err.message);
     }

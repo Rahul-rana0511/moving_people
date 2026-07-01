@@ -20,6 +20,7 @@ import {
   getProfile,
   getContactUsList,
   getContactUsDetail,
+  getTopContactUsCountries,
   getContactUsDashboard,
   updateContactUsStatus,
   deleteContactUs,
@@ -39,6 +40,7 @@ router.use(authentication);
 router.route("/createEmployee").post(createEmployee);
 router.route("/employees").get(getEmployeeList);
 router.route("/contact-us").get(getContactUsList);
+router.route("/contact-us/top-countries").get(getTopContactUsCountries);
 router.route("/contact-us/:id").get(getContactUsDetail);
 router.route("/contact-us/:id/assign").patch(assignContactToEmployee);
 router.route("/contact-us/:id/history").get(getContactHistory);
