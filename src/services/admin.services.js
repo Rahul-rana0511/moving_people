@@ -351,8 +351,8 @@ const adminServices = {
 
   getTopContactUsCountries: async (req, res) => {
     try {
-      const { limit = 10 } = req.query;
-      const limitNum = Number(limit) || 10;
+      // const { limit = 10 } = req.query;
+      // const limitNum = Number(limit) || 10;
       const countries = await Model.ContactUs.aggregate([
         {
           $match: {
@@ -377,7 +377,7 @@ const adminServices = {
           },
         },
         { $sort: { count: -1, country: 1 } },
-        { $limit: limitNum },
+        // { $limit: limitNum },
       ]);
 
       return successRes(res, 200, "Top contact us countries fetched successfully", countries);
