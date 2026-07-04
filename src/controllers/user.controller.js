@@ -4,4 +4,8 @@ const createContactUs = async (req, res) => {
   await userServices.createContactUs(req, res);
 };
 
-export { createContactUs };
+const trackVisitor = async (req, res) => {
+  await userServices.trackVisitor(req, res);
+};
+
+export { createContactUs, trackVisitor };

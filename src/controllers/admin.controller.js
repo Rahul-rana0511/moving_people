@@ -91,6 +91,10 @@ const getLastSixMonthsEnquiriesChart = async (req, res) => {
   await adminServices.getLastSixMonthsEnquiriesChart(req, res);
 };
 
+const getVisitorCountryStats = async (req, res) => {
+  await adminServices.getVisitorCountryStats(req, res);
+};
+
 export {
   createSuperAdmin,
   createAdmin,
@@ -115,5 +119,6 @@ export {
   getContactUsDashboard,
   getEnquiryTypeChart,
   getLastSixMonthsEnquiriesChart,
+  getVisitorCountryStats,
   resendOTP,
 };

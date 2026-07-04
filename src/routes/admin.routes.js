@@ -25,7 +25,8 @@ import {
   updateContactUsStatus,
   deleteContactUs,
   getEnquiryTypeChart,
-  getLastSixMonthsEnquiriesChart
+  getLastSixMonthsEnquiriesChart,
+  getVisitorCountryStats
 } from "../controllers/admin.controller.js";
 import { uploadMiddleware } from "../middlewares/multer.js";
 router.route("/register").get(createSuperAdmin);
@@ -54,4 +55,5 @@ router.route("/contact-us/:id").delete(deleteContactUs);
 router.route("/dashboard").get(getContactUsDashboard);
 router.route("/enquiry-type-chart").get(getEnquiryTypeChart);
 router.route("/last-six-months-chart").get(getLastSixMonthsEnquiriesChart);
+router.route("/visitors/country-stats").get(getVisitorCountryStats);
 export default router;

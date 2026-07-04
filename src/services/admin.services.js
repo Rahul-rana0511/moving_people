@@ -978,6 +978,43 @@ getLastSixMonthsEnquiriesChart: async (req, res) => {
     return errorRes(res, 500, err.message);
   }
 },
+  getVisitorCountryStats: async (req, res) => {
+    try {
+      const { limit = 10 } = req.query;
+      const limitNum = Number(limit) || 10;
+
+      const stats = await Model.Visitor.aggregate([
+        {
+          $match: {
+            country: {
+              $exists: true,
+              $ne: null,
+              $nin: ["", " ", "Localhost", "LOCAL"],
+            },
+          },
+        },
+        {
+          $group: {
+            _id: { $trim: { input: { $toLower: "$country" } } },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            country: "$_id",
+            count: 1,
+          },
+        },
+        { $sort: { count: -1, country: 1 } },
+        { $limit: limitNum },
+      ]);
+
+      return successRes(res, 200, "Visitor country stats fetched successfully", stats);
+    } catch (err) {
+      return errorRes(res, 500, err.message);
+    }
+  },
 };
 
 export default adminServices;
