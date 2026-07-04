@@ -979,42 +979,101 @@ getLastSixMonthsEnquiriesChart: async (req, res) => {
   }
 },
   getVisitorCountryStats: async (req, res) => {
-    try {
-      const { limit = 10 } = req.query;
-      const limitNum = Number(limit) || 10;
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      search = "",
+    } = req.query;
 
-      const stats = await Model.Visitor.aggregate([
-        {
-          $match: {
-            country: {
-              $exists: true,
-              $ne: null,
-              $nin: ["", " ", "Localhost", "LOCAL"],
+    const pageNum = Math.max(Number(page), 1);
+    const limitNum = Math.max(Number(limit), 1);
+    const skip = (pageNum - 1) * limitNum;
+
+    const pipeline = [
+      {
+        $match: {
+          country: {
+            $exists: true,
+            $ne: null,
+            $nin: ["", " ", "Localhost", "LOCAL"],
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $trim: {
+              input: { $toLower: "$country" },
             },
           },
+          count: { $sum: 1 },
         },
-        {
-          $group: {
-            _id: { $trim: { input: { $toLower: "$country" } } },
-            count: { $sum: 1 },
-          },
-        },
-        {
-          $project: {
-            _id: 0,
-            country: "$_id",
-            count: 1,
-          },
-        },
-        { $sort: { count: -1, country: 1 } },
-        { $limit: limitNum },
-      ]);
+      },
+    ];
 
-      return successRes(res, 200, "Visitor country stats fetched successfully", stats);
-    } catch (err) {
-      return errorRes(res, 500, err.message);
+    // Search on grouped country name
+    if (search.trim()) {
+      pipeline.push({
+        $match: {
+          _id: {
+            $regex: search.trim(),
+            $options: "i",
+          },
+        },
+      });
     }
-  },
+
+    pipeline.push({
+      $facet: {
+        data: [
+          {
+            $project: {
+              _id: 0,
+              country: "$_id",
+              count: 1,
+            },
+          },
+          {
+            $sort: {
+              count: -1,
+              country: 1,
+            },
+          },
+          { $skip: skip },
+          { $limit: limitNum },
+        ],
+        totalCount: [
+          {
+            $count: "total",
+          },
+        ],
+      },
+    });
+
+    const result = await Model.Visitor.aggregate(pipeline);
+
+    const data = result[0].data;
+    const total = result[0].totalCount[0]?.total || 0;
+
+    return successRes(
+      res,
+      200,
+      "Visitor country stats fetched successfully",
+      {
+        data,
+        pagination: {
+          total,
+          page: pageNum,
+          limit: limitNum,
+          totalPages: Math.ceil(total / limitNum),
+        },
+      }
+    );
+  } catch (err) {
+    return errorRes(res, 500, err.message);
+  }
+},
 };
 
 export default adminServices;

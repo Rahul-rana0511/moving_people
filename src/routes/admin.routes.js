@@ -37,7 +37,7 @@ router.route("/resetpassword").post(resetPassword);
 router.route("/resendOtp").post(resendOTP);
 router.route("/verifyotp").post(verifyOTP);
 
-router.use(authentication);
+// router.use(authentication);
 router.route("/createEmployee").post(createEmployee);
 router.route("/employees").get(getEmployeeList);
 router.route("/contact-us").get(getContactUsList);
