@@ -62,6 +62,13 @@ const userServices = {
   trackVisitor: async (req, res) => {
     try {
       const { timezone, language, page } = req.body || {};
+      console.log({
+    xForwardedFor: req.headers["x-forwarded-for"],
+    xRealIp: req.headers["x-real-ip"],
+    reqIp: req.ip,
+    remoteAddress: req.socket.remoteAddress,
+  });
+
       const ip_address = getClientIp(req);
       const geo = await getCountryFromIp(ip_address);
 
