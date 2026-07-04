@@ -984,21 +984,45 @@ getLastSixMonthsEnquiriesChart: async (req, res) => {
       page = 1,
       limit = 10,
       search = "",
+      startDate,
+      endDate,
+      start_date,
+      end_date,
     } = req.query;
 
     const pageNum = Math.max(Number(page), 1);
     const limitNum = Math.max(Number(limit), 1);
     const skip = (pageNum - 1) * limitNum;
 
+    const startDateValue = startDate || start_date;
+    const endDateValue = endDate || end_date;
+
+    const matchStage = {
+      country: {
+        $exists: true,
+        $ne: null,
+        $nin: ["", " ", "Localhost", "LOCAL"],
+      },
+    };
+
+    if (startDateValue) {
+      const start = new Date(startDateValue);
+      if (!Number.isNaN(start.getTime())) {
+        matchStage.createdAt = { ...matchStage.createdAt, $gte: start };
+      }
+    }
+
+    if (endDateValue) {
+      const end = new Date(endDateValue);
+      if (!Number.isNaN(end.getTime())) {
+        end.setHours(23, 59, 59, 999);
+        matchStage.createdAt = { ...matchStage.createdAt, $lte: end };
+      }
+    }
+
     const pipeline = [
       {
-        $match: {
-          country: {
-            $exists: true,
-            $ne: null,
-            $nin: ["", " ", "Localhost", "LOCAL"],
-          },
-        },
+        $match: matchStage,
       },
       {
         $group: {
